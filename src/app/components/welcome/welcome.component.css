@@ -1,0 +1,8 @@
+.welcome-page {
+    height: 100vh;
+    background-image: url(../../../assets/imgs/welcome-bg.webp);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}

@@ -1,0 +1,37 @@
+.signup-page {
+    background-color: #15a3a0;
+}
+
+.signup-box {
+    width: 33%;
+    border-radius: 5px;
+    padding: 1rem;
+    background-color: #f3f3f3;
+}
+
+.btn {
+    background-color: #15a3a0;
+    color: #fff;
+}
+
+p {
+    margin-bottom: 0 !important;
+}
+
+
+/*** Responsive ***/
+@media(max-width: 768px) {
+    .signup-box {
+        width: 100%;
+        padding: 1rem!important;
+    }
+    h2 {
+        margin-top: 0.25rem !important;
+    }
+}
+
+@media(min-width: 769px) and (max-width: 991px) {
+    .signup-box {
+        width: 75%;
+    }
+}
