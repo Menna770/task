@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MyApisService } from 'src/app/services/my-apis.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CountryName } from 'src/app/interfaces/countryName.interface';
+import { IPAddress } from 'src/app/interfaces/ipAddress.interface';
+import { UserData } from 'src/app/interfaces/userData.interface';
 
 @Component({
   selector: 'app-signup',
@@ -22,6 +25,7 @@ export class SignupComponent implements OnInit {
   selectedCountry:any;
   passwordMatch: boolean = true;
 
+  //Function to get all countries:
   getUserGeolocationAndNationality() {
     this.Api.getUserGeolocationAndNationality().subscribe((response) => {
       response.forEach((element:any) => {
@@ -31,20 +35,23 @@ export class SignupComponent implements OnInit {
     });
   };
 
+ //Function to get user IP Address:
   getUserIP() {
     this.Api.getUserIP().subscribe((response) => {
-      this.IPAddress = response.ip;
+      this.IPAddress = <IPAddress>response.ip;
       this.getUserGeolocation(this.IPAddress);
     });
   };
 
+  //Function to get user geolocation:
   getUserGeolocation(ip:any) {
       this.Api.getUserGeolocation(ip).subscribe((response) => {
-        this.currentUserCountry = response.country_name;
+        this.currentUserCountry = <CountryName>response.country_name;
         this.selectedCountry = this.allCountries.find((country:any) => country == this.currentUserCountry)
       });
     };
 
+    //Sign Up Form Group:
     signUpData = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern('[a-zA-Z]*')]),
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -54,13 +61,24 @@ export class SignupComponent implements OnInit {
       nationality: new FormControl(null, [Validators.required])
     });
 
-    signUp(form:any) {
-      this.Api.userName = form.value.name;
+    //Sign Up Submit Function:
+    signUp(form:UserData) {
+      this.Api.userName = form.name;
       localStorage.setItem('Token', this.Api.userName);
       this._Router.navigate(['welcome']);
     };
 
-    checkPasswordMatch(e:any) {
+    //Disable writing arabic characters in name input:
+    disableWritingArabic(event: any) {
+    const stringAllow = /[a-zA-Z0-9\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!stringAllow.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  //Check if confirm password == password:
+  checkPasswordMatch(e:any) {
       if(e.target.value == this.signUpData.controls['password'].value) {
         this.passwordMatch = true;
       } else {

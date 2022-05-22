@@ -2,14 +2,13 @@
     <div class="container py-3">
        <h2 class="text-center text-white mt-4">SIGN UP</h2>
        <div class="signup-box shadow mx-auto p-5">
-            <form [formGroup]="signUpData" (ngSubmit)="signUp(signUpData)">
+            <form [formGroup]="signUpData" (ngSubmit)="signUp(signUpData.value)">
                 
                 <div class="mb-3">
                     <label>Name</label>
-                    <input formControlName="name" class="form-control" type="text" placeholder="Name">
+                    <input (keypress)="disableWritingArabic($event)" #nameInput formControlName="name" class="form-control" type="text" placeholder="Name">
                     <div class="alert alert-danger" *ngIf="signUpData.get('name')?.errors != null && signUpData.get('name')?.touched">
                         <p *ngIf="signUpData.get('name')?.errors?.required">This field is required!</p>
-                        <p *ngIf="signUpData.get('name')?.errors?.pattern">Arabic and Special characters not allowed!</p>
                     </div>
                 </div>
 
@@ -24,7 +23,7 @@
 
                 <div class="mb-3">
                     <label>Password</label>
-                    <input formControlName="password" class="form-control" type="password" placeholder="********">
+                    <input (keypress)="disableWritingArabic($event)" formControlName="password" class="form-control" type="password" placeholder="********">
                     <div class="alert alert-danger" *ngIf="signUpData.get('password')?.errors != null && signUpData.get('password')?.touched">
                         <p *ngIf="signUpData.get('password')?.errors?.required">This field is required!</p>
                         <p *ngIf="signUpData.get('password')?.errors?.minlength">Password minimum characters are 8 char!</p>
@@ -34,7 +33,7 @@
 
                 <div class="mb-3">
                     <label>Confirm Password</label>
-                    <input (keyup)="checkPasswordMatch($event)" formControlName="confirmPassword" class="form-control" type="password" placeholder="********">
+                    <input (keypress)="disableWritingArabic($event)" (keyup)="checkPasswordMatch($event)" formControlName="confirmPassword" class="form-control" type="password" placeholder="********">
                     <div class="alert alert-danger" *ngIf="signUpData.get('confirmPassword')?.errors != null && signUpData.get('confirmPassword')?.touched">
                         <p *ngIf="signUpData.get('confirmPassword')?.errors?.required">This field is required!</p>
                         <p *ngIf="signUpData.get('confirmPassword')?.errors?.pattern">Arabic characters not allowed!</p>
@@ -47,6 +46,9 @@
                 <div class="mb-3">
                     <label>IP Address</label>
                     <input formControlName="ip" class="form-control" type="text" [(ngModel)]="IPAddress" placeholder="IP Address">
+                    <div class="alert alert-danger" *ngIf="signUpData.get('ip')?.errors != null && signUpData.get('ip')?.touched">
+                        <p *ngIf="signUpData.get('ip')?.errors?.required">This field is required!</p>
+                    </div>
                 </div>
 
                 <div class="mb-3">
