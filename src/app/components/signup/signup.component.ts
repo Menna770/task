@@ -19,6 +19,9 @@ export class SignupComponent implements OnInit {
     this.getUserGeolocationAndNationality();
   }
 
+  IPAddressAPI:any;
+  GeolocationAPI:any;
+  CountriesAPI:any;
   IPAddress:any;
   allCountries: any = [];
   currentUserCountry:any;
@@ -27,7 +30,7 @@ export class SignupComponent implements OnInit {
 
   //Function to get all countries:
   getUserGeolocationAndNationality() {
-    this.Api.getUserGeolocationAndNationality().subscribe((response) => {
+    this.CountriesAPI = this.Api.getUserGeolocationAndNationality().subscribe((response) => {
       response.forEach((element:any) => {
         this.allCountries.push(element.countryName) 
       });
@@ -37,7 +40,7 @@ export class SignupComponent implements OnInit {
 
  //Function to get user IP Address:
   getUserIP() {
-    this.Api.getUserIP().subscribe((response) => {
+    this.IPAddressAPI = this.Api.getUserIP().subscribe((response) => {
       this.IPAddress = <IPAddress>response.ip;
       this.getUserGeolocation(this.IPAddress);
     });
@@ -45,7 +48,7 @@ export class SignupComponent implements OnInit {
 
   //Function to get user geolocation:
   getUserGeolocation(ip:any) {
-      this.Api.getUserGeolocation(ip).subscribe((response) => {
+      this.GeolocationAPI = this.Api.getUserGeolocation(ip).subscribe((response) => {
         this.currentUserCountry = <CountryName>response.country_name;
         this.selectedCountry = this.allCountries.find((country:any) => country == this.currentUserCountry)
       });
@@ -85,4 +88,18 @@ export class SignupComponent implements OnInit {
         this.passwordMatch = false;
       }
     };
+    
+  ngOnDestroy(): void {
+    if(this.IPAddressAPI) {
+      this.IPAddressAPI.unsubscribe();
+    }
+
+    if(this.GeolocationAPI) {
+      this.GeolocationAPI.unsubscribe();
+    }
+
+    if(this.CountriesAPI) {
+      this.CountriesAPI.unsubscribe();
+    }
+  }
 };
